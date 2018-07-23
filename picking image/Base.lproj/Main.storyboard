@@ -46,6 +46,7 @@
                     </view>
                     <connections>
                         <outlet property="imageViewObj" destination="JYi-1U-ejZ" id="dmb-v4-Xgm"/>
+                        <outlet property="textField" destination="DWJ-nb-NmH" id="4di-5X-sBD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
