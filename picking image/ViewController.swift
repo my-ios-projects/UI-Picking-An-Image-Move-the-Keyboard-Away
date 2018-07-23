@@ -8,10 +8,12 @@
 
 import UIKit
 
+
 class ViewController: UIViewController,
-    UIImagePickerControllerDelegate,
-    UINavigationControllerDelegate,
-    UITextFieldDelegate {
+    UIImagePickerControllerDelegate, // To be an imagePicker delegate
+    UINavigationControllerDelegate,  // To be an imagePicker delegate
+    UITextFieldDelegate              // To be a textField delegate
+{
 
     
     
@@ -31,6 +33,7 @@ class ViewController: UIViewController,
     
     
     
+    // * Before the view appears, subscribe to (UIKeyboardWillShow, UIKeyboardWillHide)
     override func viewWillAppear(_ animated: Bool) {
         
         // Subscribe to Keyboard Notification willShow.
@@ -42,11 +45,14 @@ class ViewController: UIViewController,
         // Subscribe to keyboard willHide Notification.
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(getTheViewBack(_:)),
-                                               name: .UIKeyboardWillHide, object: nil)
+                                               name: .UIKeyboardWillHide,
+                                               object: nil)
     }
     
     
     
+    // * Before the view disapear subsubscribe to (UIKeyboardWillShow, UIKeyboardWillHide)
+    // * We do not need the notification anymore after the view disappears.
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self,
                                                   name: .UIKeyboardWillShow,
@@ -63,12 +69,17 @@ class ViewController: UIViewController,
     @IBAction func pickImage(_ sender: Any) {
         
         let imagePickerView = UIImagePickerController()
+        
+        // The imagePickerView show images; so you can select images/vidoes or cancel
+        // YES; there is a delegate and it contains two functions
+        // the first runs when the cancel button is pressed.
+        // the second runs when an iamge is selected.
         imagePickerView.delegate = self
         
         // The source of the image
         // .photoLibrary or .camera
         imagePickerView.sourceType = .photoLibrary
-        
+
         // Show the view
         present(imagePickerView, animated: true, completion: nil)
     }
@@ -76,13 +87,13 @@ class ViewController: UIViewController,
     
 
     
-    
+    // * imagePicker  pickImage method
     // Called when an image is selected
     func imagePickerController(_ picker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [String : Any]) {
         print("Image is selected")
         
-        
+        // get the selected image.
         if let image = info["UIImagePickerControllerOriginalImage"] as? UIImage {
             self.imageViewObj.image = image
         }
@@ -94,8 +105,7 @@ class ViewController: UIViewController,
     
     
     
-    
-    
+    // * imagePicker cancel button method
     // Called when cancel button is selected
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         print("Cancel is pressed")
@@ -114,9 +124,7 @@ class ViewController: UIViewController,
         view.frame.origin.y -= keyboadSize.cgRectValue.height
     } // end moveTheKeyboardAway
     
-    
-    
-    
+
     // Called when the Notification .UIKeyboardWillHide happens
     // We need to subscribe first.
     @objc func getTheViewBack(_ notification: Notification) {
@@ -125,6 +133,9 @@ class ViewController: UIViewController,
     }
     
     
+    /*
+     * Text Fields methods (delegate)
+     */
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
